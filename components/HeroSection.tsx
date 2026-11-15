@@ -26,7 +26,7 @@ const HeroSection: React.FC = () => {
             className="font-editorial font-semibold text-[#162b36] tracking-tight text-balance leading-[1.06] mb-5"
             style={{ fontSize: 'clamp(2.75rem, 5vw, 4.5rem)' }}
           >
-            Fadil <span className="italic font-normal text-[#a85d66]">&amp;</span> Indhea
+            Fadhil <span className="italic font-normal text-[#a85d66]">&amp;</span> Indhea
           </h1>
 
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 text-sm text-[#4e6775] mb-6">
@@ -73,7 +73,7 @@ const HeroSection: React.FC = () => {
               {!imgFailed ? (
                 <img
                   src={IMAGES.coastal}
-                  alt="Fadil dan Indhea berjalan bersama di tepi pantai saat senja"
+                  alt="Fadhil dan Indhea berjalan bersama di tepi pantai saat senja"
                   referrerPolicy="no-referrer"
                   onError={() => setImgFailed(true)}
                   className="h-full w-full object-cover object-center"
@@ -81,7 +81,7 @@ const HeroSection: React.FC = () => {
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center p-8 text-center text-[#f7f9fb]">
                   <span className="font-editorial text-4xl italic text-[#e7c6ca] mb-2">
-                    Fadil &amp; Indhea
+                    Fadhil &amp; Indhea
                   </span>
                   <span className="text-sm text-[#d5e1e8]">{WEDDING_DATE_DISPLAY}</span>
                 </div>

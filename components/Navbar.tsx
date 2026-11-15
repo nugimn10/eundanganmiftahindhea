@@ -14,7 +14,7 @@ const Navbar: React.FC<NavbarProps> = ({ onShowCover }) => {
             href="#hero"
             className="font-editorial text-2xl font-semibold tracking-tight text-[#162b36] whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a85d66]"
           >
-            Fadil &amp; Indhea
+            Fadhil &amp; Indhea
           </a>
 
           <nav aria-label="Navigasi Undangan" className="flex items-center gap-7 text-sm font-medium text-[#4e6775]">

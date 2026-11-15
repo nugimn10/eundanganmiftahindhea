@@ -73,7 +73,7 @@ export const LOVE_STORY: StoryMilestone[] = [
     year: '2026',
     title: 'Khitbah & Lamaran',
     narrative:
-      'Di hadapan kedua keluarga besar di rangkasbitung, Fadil menyampaikan niat tulus untuk meminang Indhea menuju ikatan suci.',
+      'Di hadapan kedua keluarga besar di rangkasbitung, Fadhil menyampaikan niat tulus untuk meminang Indhea menuju ikatan suci.',
   },
   {
     chapter: '04',
@@ -88,7 +88,7 @@ export const GALLERY_PHOTOS: GalleryItem[] = [
   {
     id: 'coastal-walk',
     src: coastalImg,
-    alt: 'Fadil dan Indhea berjalan berpegangan tangan di tepi pantai saat senja',
+    alt: 'Fadhil dan Indhea berjalan berpegangan tangan di tepi pantai saat senja',
     caption: 'Senja di Pesisir',
     location: 'Uluwatu · Sesi Pre-Wedding',
     span: 'lead',
@@ -96,7 +96,7 @@ export const GALLERY_PHOTOS: GalleryItem[] = [
   {
     id: 'garden-arch',
     src: gardenImg,
-    alt: 'Fadil dan Indhea tersenyum di bawah lengkungan mawar dusty rose',
+    alt: 'Fadhil dan Indhea tersenyum di bawah lengkungan mawar dusty rose',
     caption: 'Di Bawah Lengkungan Mawar',
     location: 'Villa Taman · Sesi Pre-Wedding',
     span: 'standard',
@@ -120,7 +120,7 @@ export const GALLERY_PHOTOS: GalleryItem[] = [
   {
     id: 'groom-study',
     src: groomImg,
-    alt: 'Potret Fadil mengenakan jas biru laut dengan bunga mawar dusty rose',
+    alt: 'Potret Fadhil mengenakan jas biru laut dengan bunga mawar dusty rose',
     caption: 'Mantap Melangkah',
     location: 'Potret Mempelai Pria',
     span: 'standard',
@@ -128,7 +128,7 @@ export const GALLERY_PHOTOS: GalleryItem[] = [
 ];
 
 export const GIFT_ADDRESS = {
-  recipient: 'Fadil Miftah Fauzi & Indhea Ayu Oxza',
+  recipient: 'Fadhil Miftah Fauzi & Indhea Ayu Oxza',
   phone: '+62 821-1560-****',
   address: 'Citra Gading [mau alamat siapa]',
 };
@@ -139,7 +139,7 @@ export const INITIAL_COMMENTS: GuestComment[] = [
     name: 'Budi contoh',
     attendance: 'Hadir',
     message:
-      'Selamat menempuh hidup baru Fadil & Indhea! Semoga lancar hingga hari H dan menjadi keluarga yang sakinah, mawaddah, warahmah.',
+      'Selamat menempuh hidup baru Fadhil & Indhea! Semoga lancar hingga hari H dan menjadi keluarga yang sakinah, mawaddah, warahmah.',
     timestamp: '2 jam lalu',
   },
   {
@@ -155,7 +155,7 @@ export const INITIAL_COMMENTS: GuestComment[] = [
     name: 'Dimas & Nadia contoh',
     attendance: 'Tidak Hadir',
     message:
-      'Mohon maaf belum bisa hadir langsung karena tugas di luar kota, namun doa terbaik kami selalu menyertai pernikahan Fadil & Indhea.',
+      'Mohon maaf belum bisa hadir langsung karena tugas di luar kota, namun doa terbaik kami selalu menyertai pernikahan Fadhil & Indhea.',
     timestamp: '2 hari lalu',
   },
 ];
@@ -164,13 +164,13 @@ export function downloadWeddingIcs() {
   const icsContent = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Fadil & Indhea//Wedding Invitation//ID',
+    'PRODID:-//Fadhil & Indhea//Wedding Invitation//ID',
     'BEGIN:VEVENT',
-    'UID:fadil-indhea-20270404@wedding',
+    'UID:fadhil-indhea-20270404@wedding',
     'DTSTAMP:20261115T000000Z',
     'DTSTART:20270404T010000Z',
     'DTEND:20270404T073000Z',
-    'SUMMARY:Pernikahan Fadil & Indhea',
+    'SUMMARY:Pernikahan Fadhil & Indhea',
     'DESCRIPTION:Akad Nikah (08:00 WIB) & Resepsi Pernikahan (11:00 WIB) di Gedung Serbaguna La Tansa, Rangkasbitung.',
     'LOCATION:Gedung Serbaguna La Tansa, Jl. Soekarno-Hatta, Rangkasbitung, Lebak, Banten',
     'END:VEVENT',
@@ -181,7 +181,7 @@ export function downloadWeddingIcs() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'Pernikahan-Fadil-Indhea.ics';
+  link.download = 'Pernikahan-Fadhil-Indhea.ics';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

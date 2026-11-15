@@ -55,7 +55,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ guestName, onOpen }) => {
         </div>
 
         <h1 className="font-editorial text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-[#f7f9fb] text-balance leading-[1.08] mb-3">
-          Fadil <span className="italic font-normal text-[#e7c6ca]">&amp;</span> Indhea
+          Fadhil <span className="italic font-normal text-[#e7c6ca]">&amp;</span> Indhea
         </h1>
 
         <p className="text-sm sm:text-base text-[#d5e1e8] mb-6">

@@ -119,11 +119,11 @@ const App: React.FC = () => {
                 Terima Kasih
               </p>
               <h2 className="font-editorial text-4xl sm:text-5xl font-semibold mb-4">
-                Fadil <span className="italic font-normal text-[#e7c6ca]">&amp;</span> Indhea
+                Fadhil <span className="italic font-normal text-[#e7c6ca]">&amp;</span> Indhea
               </h2>
               <p className="text-sm text-[#d5e1e8] leading-relaxed mb-6">
                 Merupakan kehormatan bagi kami apabila Anda berkenan hadir dan memberikan doa restu.
-                Kami yang berbahagia, Keluarga Besar Bapak Asep &amp; Bapak Agus (nanti kirimin di wa nama ayah ibu fadil sama indhea dil).
+                Kami yang berbahagia, Keluarga Besar Bapak Asep &amp; Bapak Agus (nanti kirimin di wa nama ayah ibu fadhil sama indhea dil).
               </p>
 
               <BotanicalDivider variant="light" className="mb-6" />

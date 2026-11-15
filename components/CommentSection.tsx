@@ -4,7 +4,7 @@ import { INITIAL_COMMENTS } from '../data/weddingData';
 import { AttendanceStatus, GuestComment } from '../types';
 import { BotanicalDivider } from './BotanicalOrnament';
 
-const STORAGE_KEY = 'fadil_indhea_wishes_v1';
+const STORAGE_KEY = 'fadhil_indhea_wishes_v1';
 
 interface CommentSectionProps {
   defaultGuestName?: string;
@@ -80,7 +80,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
           </h2>
           <p className="text-sm sm:text-base text-[#4e6775] leading-relaxed">
             Kirimkan ucapan serta doa restu sekaligus konfirmasi kehadiran Anda pada acara
-            pernikahan Fadil &amp; Indhea.
+            pernikahan Fadhil &amp; Indhea.
           </p>
           <BotanicalDivider className="mt-6" />
         </div>
@@ -144,7 +144,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   rows={4}
-                  placeholder="Tuliskan ucapan serta doa restu untuk Fadil & Indhea..."
+                  placeholder="Tuliskan ucapan serta doa restu untuk Fadhil & Indhea..."
                   className="w-full rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-4 py-2.5 text-sm text-[#162b36] placeholder:text-[#4e6775]/60 focus:border-[#a85d66] focus:bg-white focus:outline-none"
                   required
                 />
