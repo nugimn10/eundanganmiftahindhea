@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Send } from 'lucide-react';
 import { INITIAL_COMMENTS } from '../data/weddingData';
 import { AttendanceStatus, GuestComment } from '../types';
+import { BotanicalDivider } from './BotanicalOrnament';
 
 const STORAGE_KEY = 'fadil_indhea_wishes_v1';
 
@@ -65,143 +66,168 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
       : comments.filter((comment) => comment.attendance === filter);
 
   const attendingCount = comments.filter((c) => c.attendance === 'Hadir').length;
+  const notAttendingCount = comments.filter((c) => c.attendance === 'Tidak Hadir').length;
 
   return (
-    <div
-      id="ucapan"
-      className="rounded-2xl border border-[#1f3b4a]/12 bg-white p-6 sm:p-8 shadow-sm h-full flex flex-col"
-    >
-      <div className="flex flex-wrap items-baseline justify-between gap-4 mb-2">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-[#a85d66] font-semibold mb-2">
-            Buku Tamu
+    <section id="ucapan" className="bg-[#f7f9fb] py-16 sm:py-24 px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl">
+        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
+          <p className="text-xs uppercase tracking-[0.2em] text-[#a85d66] font-semibold mb-3">
+            Konfirmasi Kehadiran &amp; Buku Tamu
           </p>
-          <h2 className="font-editorial text-3xl sm:text-4xl font-semibold text-[#162b36]">
+          <h2 className="font-editorial text-4xl sm:text-5xl font-semibold text-[#162b36] mb-4 text-balance">
             Ucapan &amp; Doa Restu
           </h2>
-        </div>
-        <p className="text-xs text-[#4e6775] tabular-nums">
-          {comments.length} Ucapan <span aria-hidden="true">·</span> {attendingCount} Hadir
-        </p>
-      </div>
-
-      <p className="text-sm text-[#4e6775] mb-6 leading-relaxed">
-        Titipkan doa terbaik untuk langkah baru Fadil &amp; Indhea.
-      </p>
-
-      <form onSubmit={handleSubmit} className="space-y-4 mb-7 pb-7 border-b border-[#1f3b4a]/10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label htmlFor="wish-name" className="block text-xs font-medium text-[#162b36] mb-1">
-              Nama Anda
-            </label>
-            <input
-              type="text"
-              id="wish-name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Nama lengkap"
-              className="w-full min-h-[42px] rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-3.5 py-2 text-sm text-[#162b36] placeholder:text-[#4e6775]/60 focus:border-[#a85d66] focus:bg-white focus:outline-none"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="wish-attendance"
-              className="block text-xs font-medium text-[#162b36] mb-1"
-            >
-              Status Kehadiran
-            </label>
-            <select
-              id="wish-attendance"
-              value={attendance}
-              onChange={(e) => setAttendance(e.target.value as AttendanceStatus)}
-              className="w-full min-h-[42px] rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-3.5 py-2 text-sm text-[#162b36] focus:border-[#a85d66] focus:bg-white focus:outline-none"
-            >
-              <option value="Hadir">Hadir</option>
-              <option value="Tidak Hadir">Tidak Hadir</option>
-              <option value="Masih Ragu">Masih Ragu</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label htmlFor="wish-message" className="block text-xs font-medium text-[#162b36] mb-1">
-            Ucapan &amp; Doa
-          </label>
-          <textarea
-            id="wish-message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            rows={3}
-            placeholder="Tuliskan doa restu untuk kedua mempelai..."
-            className="w-full rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-3.5 py-2.5 text-sm text-[#162b36] placeholder:text-[#4e6775]/60 focus:border-[#a85d66] focus:bg-white focus:outline-none"
-            required
-          />
-        </div>
-
-        <div className="flex items-center justify-between gap-4">
-          <button
-            type="submit"
-            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-[#1f3b4a] hover:bg-[#162b36] px-5 py-2.5 text-sm font-semibold text-white transition-colors whitespace-nowrap cursor-pointer"
-          >
-            <Send className="h-4 w-4" />
-            <span>Kirim Ucapan</span>
-          </button>
-
-          {submittedNotice && (
-            <span className="text-xs font-medium text-[#2d6a4f]">
-              Terima kasih, ucapan Anda telah ditambahkan.
-            </span>
-          )}
-        </div>
-      </form>
-
-      <div className="flex items-center gap-1 rounded-lg bg-[#edf2f6] p-1 self-start mb-4">
-        {(['Semua', 'Hadir', 'Tidak Hadir'] as const).map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setFilter(tab)}
-            className={`min-h-[34px] rounded-md px-3 py-1 text-xs font-semibold transition-colors whitespace-nowrap cursor-pointer ${
-              filter === tab
-                ? 'bg-white text-[#162b36] shadow-xs'
-                : 'text-[#4e6775] hover:text-[#162b36]'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      <div className="space-y-4 max-h-[380px] overflow-y-auto pr-1">
-        {filteredComments.length === 0 ? (
-          <p className="text-sm text-[#4e6775] py-6 text-center">
-            Belum ada ucapan pada kategori ini.
+          <p className="text-sm sm:text-base text-[#4e6775] leading-relaxed">
+            Kirimkan ucapan serta doa restu sekaligus konfirmasi kehadiran Anda pada acara
+            pernikahan Fadil &amp; Indhea.
           </p>
-        ) : (
-          filteredComments.map((comment) => (
-            <article
-              key={comment.id}
-              className="rounded-xl border border-[#1f3b4a]/10 bg-[#f7f9fb] p-4"
-            >
-              <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1.5">
-                <h3 className="text-sm font-semibold text-[#162b36]">{comment.name}</h3>
-                <p className="text-xs text-[#4e6775]">
-                  <span className="font-medium text-[#a85d66]">{comment.attendance}</span>
-                  <span className="mx-1.5" aria-hidden="true">
-                    ·
-                  </span>
-                  <span>{comment.timestamp}</span>
-                </p>
+          <BotanicalDivider className="mt-6" />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
+          <div className="lg:col-span-5 rounded-2xl border border-[#1f3b4a]/12 bg-white p-6 sm:p-8 shadow-sm">
+            <h3 className="font-editorial text-2xl sm:text-3xl font-semibold text-[#162b36] mb-1.5">
+              Tulis Ucapan &amp; Kehadiran
+            </h3>
+            <p className="text-sm text-[#4e6775] mb-6">
+              Pilih status kehadiran Anda dan titipkan doa terbaik untuk kedua mempelai.
+            </p>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="wish-name"
+                  className="block text-sm font-medium text-[#162b36] mb-1.5"
+                >
+                  Nama Anda
+                </label>
+                <input
+                  type="text"
+                  id="wish-name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Masukkan nama lengkap"
+                  className="w-full min-h-[44px] rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-4 py-2.5 text-sm text-[#162b36] placeholder:text-[#4e6775]/60 focus:border-[#a85d66] focus:bg-white focus:outline-none"
+                  required
+                />
               </div>
-              <p className="text-sm text-[#2b3d47] leading-relaxed">{comment.message}</p>
-            </article>
-          ))
-        )}
+
+              <div>
+                <label
+                  htmlFor="wish-attendance"
+                  className="block text-sm font-medium text-[#162b36] mb-1.5"
+                >
+                  Konfirmasi Kehadiran
+                </label>
+                <select
+                  id="wish-attendance"
+                  value={attendance}
+                  onChange={(e) => setAttendance(e.target.value as AttendanceStatus)}
+                  className="w-full min-h-[44px] rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-3.5 py-2.5 text-sm text-[#162b36] focus:border-[#a85d66] focus:bg-white focus:outline-none"
+                >
+                  <option value="Hadir">Hadir</option>
+                  <option value="Tidak Hadir">Tidak Hadir</option>
+                  <option value="Masih Ragu">Masih Ragu</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="wish-message"
+                  className="block text-sm font-medium text-[#162b36] mb-1.5"
+                >
+                  Ucapan &amp; Doa
+                </label>
+                <textarea
+                  id="wish-message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  rows={4}
+                  placeholder="Tuliskan ucapan serta doa restu untuk Fadil & Indhea..."
+                  className="w-full rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-4 py-2.5 text-sm text-[#162b36] placeholder:text-[#4e6775]/60 focus:border-[#a85d66] focus:bg-white focus:outline-none"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-lg bg-[#a85d66] hover:bg-[#924d56] px-6 py-3 text-sm font-semibold text-white transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3b4a]"
+              >
+                <Send className="h-4 w-4" />
+                <span>Kirim Ucapan</span>
+              </button>
+
+              {submittedNotice && (
+                <p role="status" className="text-xs font-medium text-[#2d6a4f] text-center pt-1">
+                  Terima kasih, ucapan dan konfirmasi kehadiran Anda telah ditambahkan.
+                </p>
+              )}
+            </form>
+          </div>
+
+          <div className="lg:col-span-7 rounded-2xl border border-[#1f3b4a]/12 bg-white p-6 sm:p-8 shadow-sm flex flex-col">
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-5 mb-5 border-b border-[#1f3b4a]/10">
+              <div className="text-xs sm:text-sm text-[#4e6775] tabular-nums">
+                <span className="font-semibold text-[#162b36]">{comments.length} Ucapan</span>
+                <span className="mx-2" aria-hidden="true">
+                  ·
+                </span>
+                <span>{attendingCount} Hadir</span>
+                <span className="mx-2" aria-hidden="true">
+                  ·
+                </span>
+                <span>{notAttendingCount} Berhalangan</span>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1 rounded-lg bg-[#edf2f6] p-1">
+                {(['Semua', 'Hadir', 'Tidak Hadir', 'Masih Ragu'] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setFilter(tab)}
+                    className={`min-h-[34px] rounded-md px-3 py-1 text-xs font-semibold transition-colors whitespace-nowrap cursor-pointer ${
+                      filter === tab
+                        ? 'bg-white text-[#162b36] shadow-xs'
+                        : 'text-[#4e6775] hover:text-[#162b36]'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1 flex-1">
+              {filteredComments.length === 0 ? (
+                <p className="text-sm text-[#4e6775] py-10 text-center">
+                  Belum ada ucapan pada kategori ini.
+                </p>
+              ) : (
+                filteredComments.map((comment) => (
+                  <article
+                    key={comment.id}
+                    className="rounded-xl border border-[#1f3b4a]/10 bg-[#f7f9fb] p-4 sm:p-5"
+                  >
+                    <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1.5">
+                      <h4 className="text-sm font-semibold text-[#162b36]">{comment.name}</h4>
+                      <p className="text-xs text-[#4e6775]">
+                        <span className="font-medium text-[#a85d66]">{comment.attendance}</span>
+                        <span className="mx-1.5" aria-hidden="true">
+                          ·
+                        </span>
+                        <span>{comment.timestamp}</span>
+                      </p>
+                    </div>
+                    <p className="text-sm text-[#2b3d47] leading-relaxed">{comment.message}</p>
+                  </article>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

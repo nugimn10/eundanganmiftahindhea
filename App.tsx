@@ -8,7 +8,6 @@ import Countdown from './components/Countdown';
 import EventDetails from './components/EventDetails';
 import LoveStory from './components/LoveStory';
 import PhotoGallery from './components/PhotoGallery';
-import RsvpSection from './components/RsvpSection';
 import CommentSection from './components/CommentSection';
 import GiftSection from './components/GiftSection';
 import MusicPlayer from './components/MusicPlayer';
@@ -105,16 +104,9 @@ const App: React.FC = () => {
               <PhotoGallery />
             </div>
 
-            <section className="scroll-animate bg-[#f7f9fb] py-16 sm:py-24 px-4 sm:px-6">
-              <div className="mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
-                <div className="lg:col-span-5">
-                  <RsvpSection defaultGuestName={guestName} />
-                </div>
-                <div className="lg:col-span-7">
-                  <CommentSection defaultGuestName={guestName} />
-                </div>
-              </div>
-            </section>
+            <div className="scroll-animate">
+              <CommentSection defaultGuestName={guestName} />
+            </div>
 
             <div className="scroll-animate">
               <GiftSection />

@@ -43,19 +43,19 @@ const Navbar: React.FC<NavbarProps> = ({ onShowCover }) => {
               Galeri
             </a>
             <a
-              href="#ucapan"
+              href="#hadiah"
               className="hover:text-[#162b36] hover:underline underline-offset-4 decoration-[#a85d66] transition-colors whitespace-nowrap shrink-0"
             >
-              Ucapan
+              Kado
             </a>
           </nav>
 
           <div className="shrink-0">
             <a
-              href="#rsvp"
+              href="#ucapan"
               className="inline-flex min-h-[40px] items-center justify-center rounded-lg bg-[#1f3b4a] hover:bg-[#162b36] px-4 py-2 text-xs font-semibold text-white transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a85d66]"
             >
-              Konfirmasi RSVP
+              Ucapan &amp; Kehadiran
             </a>
           </div>
         </div>
@@ -95,11 +95,11 @@ const Navbar: React.FC<NavbarProps> = ({ onShowCover }) => {
           <span className="text-[11px] font-medium whitespace-nowrap">Galeri</span>
         </a>
         <a
-          href="#rsvp"
+          href="#ucapan"
           className="flex flex-col items-center justify-center gap-0.5 min-w-[52px] min-h-[44px] text-[#a85d66] hover:text-[#924d56] transition-colors"
         >
           <MailCheck className="h-4 w-4" />
-          <span className="text-[11px] font-semibold whitespace-nowrap">RSVP</span>
+          <span className="text-[11px] font-semibold whitespace-nowrap">Ucapan</span>
         </a>
       </nav>
     </>

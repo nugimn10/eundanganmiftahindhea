@@ -8,13 +8,6 @@ export interface GuestComment {
   timestamp: string;
 }
 
-export interface RsvpSubmission {
-  name: string;
-  attendance: 'attending' | 'not_attending';
-  guests: number;
-  submittedAt: string;
-}
-
 export interface StoryMilestone {
   chapter: string;
   year: string;
