@@ -17,6 +17,41 @@ function normalizeAttendance(value: unknown): AttendanceStatus {
   return 'Hadir';
 }
 
+function formatGuestDate(raw: unknown): string {
+  if (raw === null || raw === undefined) return '';
+  const text = String(raw).trim();
+  if (!text) return '';
+
+  const formatter = new Intl.DateTimeFormat('id-ID', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'Asia/Jakarta',
+  });
+
+  if (/^\d{10,13}$/.test(text)) {
+    const num = Number(text);
+    const ms = text.length === 10 ? num * 1000 : num;
+    const d = new Date(ms);
+    if (!Number.isNaN(d.getTime())) return formatter.format(d);
+  }
+
+  // Strip trailing time like ", 20:50" or "20:50:12" so date-only strings parse reliably
+  const cleaned = text.replace(/,\s*\d{1,2}:\d{2}(:\d{2})?.*$/, '').trim();
+  const parsed = new Date(text);
+  if (!Number.isNaN(parsed.getTime())) {
+    return formatter.format(parsed);
+  }
+
+  const parsedCleaned = new Date(cleaned);
+  if (!Number.isNaN(parsedCleaned.getTime())) {
+    return formatter.format(parsedCleaned);
+  }
+
+  return cleaned;
+}
+
 const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }) => {
   const [comments, setComments] = useState<GuestComment[]>([]);
   const [name, setName] = useState(
@@ -58,7 +93,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
           name: String(item.name || 'Tamu Undangan'),
           attendance: normalizeAttendance(item.attendance),
           message: String(item.message || ''),
-          timestamp: String(item.timestamp || 'Baru saja'),
+          timestamp: formatGuestDate(item.timestamp) || formatGuestDate(new Date()),
         })
       );
 
@@ -74,7 +109,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
         if (cached) {
           const parsed: GuestComment[] = JSON.parse(cached);
           if (Array.isArray(parsed)) {
-            setComments(parsed);
+            setComments(
+              parsed.map((item) => ({
+                ...item,
+                timestamp: formatGuestDate(item.timestamp) || item.timestamp,
+              }))
+            );
           }
         }
       } catch {
@@ -131,14 +171,15 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
               name: String(payload.item.name || trimmedName),
               attendance: normalizeAttendance(payload.item.attendance),
               message: String(payload.item.message || trimmedMessage),
-              timestamp: String(payload.item.timestamp || 'Baru saja'),
+              timestamp:
+                formatGuestDate(payload.item.timestamp) || formatGuestDate(new Date()),
             }
           : {
               id: Date.now(),
               name: trimmedName,
               attendance,
               message: trimmedMessage,
-              timestamp: 'Baru saja',
+              timestamp: formatGuestDate(new Date()),
             };
 
       setComments((prev) => {
