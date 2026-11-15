@@ -19,8 +19,8 @@ export const IMAGES = {
 
 export const COUPLE = {
   groom: {
-    shortName: 'Fadil',
-    fullName: 'Fadil Miftah Fauzi',
+    shortName: 'Fadhil',
+    fullName: 'Fadhil Miftah Fauzi',
     role: 'Mempelai Pria',
     parents: 'Putra pertama dari Bapak Asep & Ibu Bety',
     origin: 'Serang',
