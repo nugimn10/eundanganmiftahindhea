@@ -11,6 +11,7 @@ import PhotoGallery from './components/PhotoGallery';
 import CommentSection from './components/CommentSection';
 import GiftSection from './components/GiftSection';
 import MusicPlayer from './components/MusicPlayer';
+import AdminGuestPage from './components/AdminGuestPage';
 import { BotanicalDivider } from './components/BotanicalOrnament';
 import {
   WEDDING_CITY,
@@ -19,8 +20,63 @@ import {
 } from './data/weddingData';
 import { useYouTubeAudio } from './hooks/useYouTubeAudio';
 
+function checkIsAdminRoute(): boolean {
+  if (typeof window === 'undefined') return false;
+  const hash = window.location.hash.toLowerCase();
+  const params = new URLSearchParams(window.location.search);
+  return hash === '#admin' || hash.startsWith('#admin/') || params.get('page') === 'admin';
+}
+
 const App: React.FC = () => {
+  const [isAdminRoute, setIsAdminRoute] = useState<boolean>(checkIsAdminRoute);
   const [isInvitationOpen, setInvitationOpen] = useState(false);
+
+  useEffect(() => {
+    const syncRoute = () => setIsAdminRoute(checkIsAdminRoute());
+    window.addEventListener('hashchange', syncRoute);
+    window.addEventListener('popstate', syncRoute);
+    return () => {
+      window.removeEventListener('hashchange', syncRoute);
+      window.removeEventListener('popstate', syncRoute);
+    };
+  }, []);
+
+  const handleExitAdmin = () => {
+    if (window.location.hash.toLowerCase().startsWith('#admin')) {
+      window.history.replaceState(
+        null,
+        '',
+        `${window.location.pathname}${window.location.search}`
+      );
+    } else {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('page');
+      window.history.replaceState(null, '', url.toString());
+    }
+    setIsAdminRoute(false);
+  };
+
+  if (isAdminRoute) {
+    return <AdminGuestPage onExitAdmin={handleExitAdmin} />;
+  }
+
+  return (
+    <InvitationView
+      isInvitationOpen={isInvitationOpen}
+      setInvitationOpen={setInvitationOpen}
+    />
+  );
+};
+
+interface InvitationViewProps {
+  isInvitationOpen: boolean;
+  setInvitationOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const InvitationView: React.FC<InvitationViewProps> = ({
+  isInvitationOpen,
+  setInvitationOpen,
+}) => {
   const {
     isPlaying: isMusicPlaying,
     play: playMusic,

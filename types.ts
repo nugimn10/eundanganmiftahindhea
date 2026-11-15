@@ -23,3 +23,11 @@ export interface GalleryItem {
   location: string;
   span?: 'lead' | 'standard';
 }
+
+export interface InvitedGuest {
+  id: number;
+  name: string;
+  group: string;
+  phone: string;
+  timestamp: string;
+}
