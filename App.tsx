@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowUp } from 'lucide-react';
 import SplashScreen from './components/SplashScreen';
 import Navbar from './components/Navbar';
@@ -12,12 +12,24 @@ import CommentSection from './components/CommentSection';
 import GiftSection from './components/GiftSection';
 import MusicPlayer from './components/MusicPlayer';
 import { BotanicalDivider } from './components/BotanicalOrnament';
-import { WEDDING_CITY, WEDDING_DATE_DISPLAY } from './data/weddingData';
+import {
+  WEDDING_CITY,
+  WEDDING_DATE_DISPLAY,
+  YOUTUBE_MUSIC,
+} from './data/weddingData';
+import { useYouTubeAudio } from './hooks/useYouTubeAudio';
 
 const App: React.FC = () => {
   const [isInvitationOpen, setInvitationOpen] = useState(false);
-  const [isMusicPlaying, setMusicPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const {
+    isPlaying: isMusicPlaying,
+    play: playMusic,
+    toggle: toggleMusic,
+  } = useYouTubeAudio({
+    containerId: 'yt-wedding-music',
+    primaryId: YOUTUBE_MUSIC.primaryId,
+    fallbackId: YOUTUBE_MUSIC.fallbackId,
+  });
 
   const guestName = useMemo(() => {
     if (typeof window === 'undefined') return 'Tamu Undangan Terhormat';
@@ -27,38 +39,36 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!audioRef.current) return;
-    if (isMusicPlaying) {
-      audioRef.current.play().catch(() => {
-        setMusicPlaying(false);
-      });
-    } else {
-      audioRef.current.pause();
-    }
-  }, [isMusicPlaying]);
-
-  useEffect(() => {
     if (!isInvitationOpen) return;
 
     const elements = document.querySelectorAll('.scroll-animate');
+    if (elements.length === 0) return;
+
+    if (!('IntersectionObserver' in window)) {
+      elements.forEach((el) => el.classList.add('in-view'));
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.08 }
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
     );
 
     elements.forEach((el) => observer.observe(el));
+
     return () => observer.disconnect();
   }, [isInvitationOpen]);
 
   const handleOpenInvitation = () => {
     setInvitationOpen(true);
-    setMusicPlaying(true);
+    playMusic();
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
@@ -67,14 +77,14 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
-  const toggleMusic = () => {
-    setMusicPlaying((prev) => !prev);
-  };
-
   return (
     <div className="min-h-screen bg-[#f7f9fb] text-[#1f3b4a]">
       {!isInvitationOpen && (
-        <SplashScreen guestName={guestName} onOpen={handleOpenInvitation} />
+        <SplashScreen
+          guestName={guestName}
+          onStartOpening={playMusic}
+          onOpen={handleOpenInvitation}
+        />
       )}
 
       {isInvitationOpen && (
@@ -147,11 +157,12 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <audio
-        ref={audioRef}
-        src="https://cdn.pixabay.com/audio/2022/02/14/audio_206a54a042.mp3"
-        loop
-      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed bottom-0 left-0 -z-10 h-[200px] w-[200px] overflow-hidden opacity-[0.001]"
+      >
+        <div id="yt-wedding-music" className="h-full w-full" />
+      </div>
     </div>
   );
 };

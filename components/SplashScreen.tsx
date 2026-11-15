@@ -5,17 +5,24 @@ import { BotanicalCorner, BotanicalDivider } from './BotanicalOrnament';
 
 interface SplashScreenProps {
   guestName: string;
+  onStartOpening?: () => void;
   onOpen: () => void;
 }
 
 type EnvelopeStage = 'sealed' | 'opening' | 'rising';
 
-const SplashScreen: React.FC<SplashScreenProps> = ({ guestName, onOpen }) => {
+const SplashScreen: React.FC<SplashScreenProps> = ({
+  guestName,
+  onStartOpening,
+  onOpen,
+}) => {
   const [stage, setStage] = useState<EnvelopeStage>('sealed');
   const [imgFailed, setImgFailed] = useState(false);
 
   const handleOpen = () => {
     if (stage !== 'sealed') return;
+
+    onStartOpening?.();
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
