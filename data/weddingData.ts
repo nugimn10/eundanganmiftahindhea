@@ -47,7 +47,7 @@ export const UNIFIED_EVENT = {
   ],
   venue: 'Gedung Serbaguna La Tansa',
   address: 'Jl. Soekarno–Hatta, Cijoro Lebak, Kec. Rangkasbitung, Kab. Lebak, Banten 42317',
-  note: 'Kehadiran 30 menit sebelum akad dimulai sangat kami hargai. Busana formal bernuansa biru laut, gading, atau dusty rose.',
+  note: 'Kehadiran 30 menit sebelum akad dimulai sangat kami hargai. (Busana formal bernuansa biru laut, gading, atau dusty rose. #ini misal kalo mau ada drescode#)',
   mapsUrl: 'https://maps.app.goo.gl/7nJzfXA5kCTaGcAK9',
   mapEmbedUrl:
     'https://maps.google.com/maps?q=Gedung+Serbaguna+La+Tansa,-6.3439122,106.2526159&t=&z=16&ie=UTF8&iwloc=&output=embed',
