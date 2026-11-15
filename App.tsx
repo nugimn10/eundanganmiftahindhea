@@ -123,7 +123,7 @@ const App: React.FC = () => {
               </h2>
               <p className="text-sm text-[#d5e1e8] leading-relaxed mb-6">
                 Merupakan kehormatan bagi kami apabila Anda berkenan hadir dan memberikan doa restu.
-                Kami yang berbahagia, Keluarga Besar Bapak Hendra Wijaya &amp; Bapak Agus Santoso.
+                Kami yang berbahagia, Keluarga Besar Bapak Asep &amp; Bapak Agus (nanti kirimin di wa nama ayah ibu fadil sama indhea dil).
               </p>
 
               <BotanicalDivider variant="light" className="mb-6" />
