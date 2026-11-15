@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Send } from 'lucide-react';
-import { INITIAL_COMMENTS } from '../data/weddingData';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Loader2, RefreshCw, Send } from 'lucide-react';
+import { GOOGLE_SHEETS_WEBAPP_URL } from '../data/weddingData';
 import { AttendanceStatus, GuestComment } from '../types';
 import { BotanicalDivider } from './BotanicalOrnament';
 
-const STORAGE_KEY = 'fadhil_indhea_wishes_v1';
+const STORAGE_KEY = 'fadhil_indhea_wishes_cache_v1';
 
 interface CommentSectionProps {
   defaultGuestName?: string;
 }
 
+function normalizeAttendance(value: unknown): AttendanceStatus {
+  if (value === 'Tidak Hadir' || value === 'Masih Ragu' || value === 'Hadir') {
+    return value;
+  }
+  return 'Hadir';
+}
+
 const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }) => {
-  const [comments, setComments] = useState<GuestComment[]>(INITIAL_COMMENTS);
+  const [comments, setComments] = useState<GuestComment[]>([]);
   const [name, setName] = useState(
     defaultGuestName && defaultGuestName !== 'Tamu Undangan Terhormat'
       ? defaultGuestName
@@ -20,44 +27,138 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
   const [attendance, setAttendance] = useState<AttendanceStatus>('Hadir');
   const [message, setMessage] = useState('');
   const [filter, setFilter] = useState<'Semua' | AttendanceStatus>('Semua');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fetchError, setFetchError] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const [submittedNotice, setSubmittedNotice] = useState(false);
 
-  useEffect(() => {
+  const loadComments = useCallback(async () => {
+    setIsLoading(true);
+    setFetchError('');
+
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed: GuestComment[] = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setComments(parsed);
-        }
+      const response = await fetch(GOOGLE_SHEETS_WEBAPP_URL, {
+        method: 'GET',
+        redirect: 'follow',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const payload = await response.json();
+      if (payload?.status !== 'ok' || !Array.isArray(payload.data)) {
+        throw new Error('Format respons tidak sesuai.');
+      }
+
+      const normalized: GuestComment[] = payload.data.map(
+        (item: Record<string, unknown>, idx: number) => ({
+          id: Number(item.id) || idx + 1,
+          name: String(item.name || 'Tamu Undangan'),
+          attendance: normalizeAttendance(item.attendance),
+          message: String(item.message || ''),
+          timestamp: String(item.timestamp || 'Baru saja'),
+        })
+      );
+
+      setComments(normalized);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+      } catch {
+        // Ignore storage quota errors
       }
     } catch {
-      // Ignore storage errors
+      try {
+        const cached = localStorage.getItem(STORAGE_KEY);
+        if (cached) {
+          const parsed: GuestComment[] = JSON.parse(cached);
+          if (Array.isArray(parsed)) {
+            setComments(parsed);
+          }
+        }
+      } catch {
+        // Ignore storage errors
+      }
+      setFetchError('Gagal memuat daftar ucapan dari Google Sheets.');
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    loadComments();
+  }, [loadComments]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !message.trim()) return;
+    setSubmitError('');
+    setSubmittedNotice(false);
 
-    const newComment: GuestComment = {
-      id: Date.now(),
-      name: name.trim(),
-      attendance,
-      message: message.trim(),
-      timestamp: 'Baru saja',
-    };
+    const trimmedName = name.trim();
+    const trimmedMessage = message.trim();
 
-    const nextComments = [newComment, ...comments];
-    setComments(nextComments);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(nextComments));
-    } catch {
-      // Ignore storage errors
+    if (!trimmedName || !trimmedMessage) {
+      setSubmitError('Mohon isi nama dan ucapan Anda terlebih dahulu.');
+      return;
     }
-    setMessage('');
-    setSubmittedNotice(true);
-    setTimeout(() => setSubmittedNotice(false), 3000);
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(GOOGLE_SHEETS_WEBAPP_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify({
+          name: trimmedName,
+          attendance,
+          message: trimmedMessage,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const payload = await response.json();
+      const createdItem: GuestComment =
+        payload?.status === 'ok' && payload?.item
+          ? {
+              id: Number(payload.item.id) || Date.now(),
+              name: String(payload.item.name || trimmedName),
+              attendance: normalizeAttendance(payload.item.attendance),
+              message: String(payload.item.message || trimmedMessage),
+              timestamp: String(payload.item.timestamp || 'Baru saja'),
+            }
+          : {
+              id: Date.now(),
+              name: trimmedName,
+              attendance,
+              message: trimmedMessage,
+              timestamp: 'Baru saja',
+            };
+
+      setComments((prev) => {
+        const next = [createdItem, ...prev];
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        } catch {
+          // Ignore storage errors
+        }
+        return next;
+      });
+
+      setMessage('');
+      setSubmittedNotice(true);
+      setTimeout(() => setSubmittedNotice(false), 4000);
+    } catch {
+      setSubmitError('Ucapan gagal dikirim ke Google Sheets. Silakan coba lagi.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const filteredComments =
@@ -108,7 +209,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Masukkan nama lengkap"
-                  className="w-full min-h-[44px] rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-4 py-2.5 text-sm text-[#162b36] placeholder:text-[#4e6775]/60 focus:border-[#a85d66] focus:bg-white focus:outline-none"
+                  disabled={isSubmitting}
+                  className="w-full min-h-[44px] rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-4 py-2.5 text-sm text-[#162b36] placeholder:text-[#4e6775]/60 focus:border-[#a85d66] focus:bg-white focus:outline-none disabled:opacity-60"
                   required
                 />
               </div>
@@ -124,7 +226,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
                   id="wish-attendance"
                   value={attendance}
                   onChange={(e) => setAttendance(e.target.value as AttendanceStatus)}
-                  className="w-full min-h-[44px] rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-3.5 py-2.5 text-sm text-[#162b36] focus:border-[#a85d66] focus:bg-white focus:outline-none"
+                  disabled={isSubmitting}
+                  className="w-full min-h-[44px] rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-3.5 py-2.5 text-sm text-[#162b36] focus:border-[#a85d66] focus:bg-white focus:outline-none disabled:opacity-60"
                 >
                   <option value="Hadir">Hadir</option>
                   <option value="Tidak Hadir">Tidak Hadir</option>
@@ -144,23 +247,40 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   rows={4}
+                  disabled={isSubmitting}
                   placeholder="Tuliskan ucapan serta doa restu untuk Fadhil & Indhea..."
-                  className="w-full rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-4 py-2.5 text-sm text-[#162b36] placeholder:text-[#4e6775]/60 focus:border-[#a85d66] focus:bg-white focus:outline-none"
+                  className="w-full rounded-lg border border-[#1f3b4a]/20 bg-[#f7f9fb] px-4 py-2.5 text-sm text-[#162b36] placeholder:text-[#4e6775]/60 focus:border-[#a85d66] focus:bg-white focus:outline-none disabled:opacity-60"
                   required
                 />
               </div>
 
               <button
                 type="submit"
-                className="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-lg bg-[#a85d66] hover:bg-[#924d56] px-6 py-3 text-sm font-semibold text-white transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3b4a]"
+                disabled={isSubmitting}
+                className="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-lg bg-[#a85d66] hover:bg-[#924d56] px-6 py-3 text-sm font-semibold text-white transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3b4a] disabled:opacity-65 disabled:cursor-not-allowed"
               >
-                <Send className="h-4 w-4" />
-                <span>Kirim Ucapan</span>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Mengirim Ucapan...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    <span>Kirim Ucapan</span>
+                  </>
+                )}
               </button>
+
+              {submitError && (
+                <p role="alert" className="text-xs font-medium text-[#9e2a2b] text-center pt-1">
+                  {submitError}
+                </p>
+              )}
 
               {submittedNotice && (
                 <p role="status" className="text-xs font-medium text-[#2d6a4f] text-center pt-1">
-                  Terima kasih, ucapan dan konfirmasi kehadiran Anda telah ditambahkan.
+                  Terima kasih, ucapan dan konfirmasi kehadiran Anda telah tersimpan.
                 </p>
               )}
             </form>
@@ -168,16 +288,29 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
 
           <div className="lg:col-span-7 rounded-2xl border border-[#1f3b4a]/12 bg-white p-6 sm:p-8 shadow-sm flex flex-col">
             <div className="flex flex-wrap items-center justify-between gap-4 pb-5 mb-5 border-b border-[#1f3b4a]/10">
-              <div className="text-xs sm:text-sm text-[#4e6775] tabular-nums">
-                <span className="font-semibold text-[#162b36]">{comments.length} Ucapan</span>
-                <span className="mx-2" aria-hidden="true">
-                  ·
-                </span>
-                <span>{attendingCount} Hadir</span>
-                <span className="mx-2" aria-hidden="true">
-                  ·
-                </span>
-                <span>{notAttendingCount} Berhalangan</span>
+              <div className="flex items-center gap-3">
+                <div className="text-xs sm:text-sm text-[#4e6775] tabular-nums">
+                  <span className="font-semibold text-[#162b36]">{comments.length} Ucapan</span>
+                  <span className="mx-2" aria-hidden="true">
+                    ·
+                  </span>
+                  <span>{attendingCount} Hadir</span>
+                  <span className="mx-2" aria-hidden="true">
+                    ·
+                  </span>
+                  <span>{notAttendingCount} Berhalangan</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={loadComments}
+                  disabled={isLoading}
+                  aria-label="Muat ulang daftar ucapan"
+                  title="Muat ulang daftar ucapan"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-[#1f3b4a]/15 text-[#4e6775] hover:text-[#162b36] hover:bg-[#edf2f6] transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+                </button>
               </div>
 
               <div className="flex flex-wrap items-center gap-1 rounded-lg bg-[#edf2f6] p-1">
@@ -198,10 +331,30 @@ const CommentSection: React.FC<CommentSectionProps> = ({ defaultGuestName = '' }
               </div>
             </div>
 
+            {fetchError && (
+              <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-[#9e2a2b]/20 bg-[#9e2a2b]/5 px-4 py-2.5 text-xs text-[#9e2a2b]">
+                <span>{fetchError}</span>
+                <button
+                  type="button"
+                  onClick={loadComments}
+                  className="font-semibold underline underline-offset-2 whitespace-nowrap cursor-pointer"
+                >
+                  Coba Lagi
+                </button>
+              </div>
+            )}
+
             <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1 flex-1">
-              {filteredComments.length === 0 ? (
+              {isLoading && comments.length === 0 ? (
+                <div className="flex items-center justify-center gap-2 py-12 text-sm text-[#4e6775]">
+                  <Loader2 className="h-4 w-4 animate-spin text-[#a85d66]" />
+                  <span>Memuat ucapan tamu...</span>
+                </div>
+              ) : filteredComments.length === 0 ? (
                 <p className="text-sm text-[#4e6775] py-10 text-center">
-                  Belum ada ucapan pada kategori ini.
+                  {comments.length === 0
+                    ? 'Belum ada ucapan yang masuk. Jadilah yang pertama menuliskan doa restu.'
+                    : 'Belum ada ucapan pada kategori ini.'}
                 </p>
               ) : (
                 filteredComments.map((comment) => (

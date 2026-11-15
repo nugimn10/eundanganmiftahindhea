@@ -133,6 +133,9 @@ export const GIFT_ADDRESS = {
   address: 'Citra Gading [mau alamat siapa]',
 };
 
+export const GOOGLE_SHEETS_WEBAPP_URL =
+  'https://script.google.com/macros/s/AKfycbwPW_iEPvJt-G6YfQtucn4lhPqoNRQ8CVxh5Ql753rHpYdaFcJaERbqbOA2R65OQ_L0EQ/exec';
+
 export const INITIAL_COMMENTS: GuestComment[] = [
   {
     id: 1,
