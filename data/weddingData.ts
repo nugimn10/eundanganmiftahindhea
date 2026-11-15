@@ -24,7 +24,7 @@ export const COUPLE = {
     role: 'Mempelai Pria',
     parents: 'Putra pertama dari Bapak Asep & Ibu Bety',
     origin: 'Serang',
-    bio: 'Pribadi tenang yang gemar merancang perangkat lunak, mendaki pegunungan Nusantara, dan menyeduh kopi pagi.',
+    bio: 'Pribadi tenang yang gemar bermain musik, mendaki pegunungan Nusantara, dan menyeduh kopi pagi.',
     image: groomImg,
   },
   bride: {
@@ -33,7 +33,7 @@ export const COUPLE = {
     role: 'Mempelai Wanita',
     parents: 'Putri kedua dari Bapak titik titik & Ibu titik titik',
     origin: 'Rangkasbitung',
-    bio: 'Desainer visual yang mencintai lukisan cat air, aroma mawar taman, serta perjalanan menyusuri pesisir.',
+    bio: 'Dokter muda yang mencintai lukisan cat air, aroma mawar taman, serta perjalanan menyusuri pesisir.',
     image: brideImg,
   },
 };
@@ -70,7 +70,7 @@ export const LOVE_STORY: StoryMilestone[] = [
   },
   {
     chapter: '03',
-    year: '2025',
+    year: '2026',
     title: 'Khitbah & Lamaran',
     narrative:
       'Di hadapan kedua keluarga besar di rangkasbitung, Fadil menyampaikan niat tulus untuk meminang Indhea menuju ikatan suci.',
