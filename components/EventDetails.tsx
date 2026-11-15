@@ -22,7 +22,7 @@ const EventDetails: React.FC = () => {
           <BotanicalDivider className="mt-6" />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
+        <div className="scroll-stagger grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
           <article className="lg:col-span-5 flex flex-col justify-between rounded-2xl border border-[#1f3b4a]/12 bg-white p-6 sm:p-8 shadow-sm">
             <div>
               <div className="border-b border-[#1f3b4a]/10 pb-5 mb-6">

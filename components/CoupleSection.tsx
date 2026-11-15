@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { COUPLE } from '../data/weddingData';
+import { useParallax } from '../hooks/useParallax';
 import { BotanicalDivider } from './BotanicalOrnament';
 
 const PersonCard: React.FC<{
@@ -43,8 +44,17 @@ const PersonCard: React.FC<{
 };
 
 const CoupleSection: React.FC = () => {
+  const { containerRef: groomContainerRef, layerRef: groomLayerRef } = useParallax<HTMLDivElement>({
+    speed: -0.04,
+    maxOffset: 16,
+  });
+  const { containerRef: brideContainerRef, layerRef: brideLayerRef } = useParallax<HTMLDivElement>({
+    speed: 0.04,
+    maxOffset: 16,
+  });
+
   return (
-    <section id="mempelai" className="bg-[#edf2f6] py-16 sm:py-24 px-4 sm:px-6">
+    <section id="mempelai" className="bg-[#edf2f6] py-16 sm:py-24 px-4 sm:px-6 overflow-hidden">
       <div className="mx-auto max-w-5xl">
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
           <p className="text-xs uppercase tracking-[0.2em] text-[#a85d66] font-semibold mb-3">
@@ -60,12 +70,10 @@ const CoupleSection: React.FC = () => {
           <BotanicalDivider className="mt-6" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-11 gap-6 items-stretch">
-          <div className="md:col-span-5 flex">
-            <div className="w-full flex">
-              <div className="w-full">
-                <PersonCard person={COUPLE.groom} />
-              </div>
+        <div className="scroll-stagger grid grid-cols-1 md:grid-cols-11 gap-6 items-stretch">
+          <div ref={groomContainerRef} className="md:col-span-5 flex">
+            <div ref={groomLayerRef} className="parallax-layer w-full flex">
+              <PersonCard person={COUPLE.groom} />
             </div>
           </div>
 
@@ -78,8 +86,8 @@ const CoupleSection: React.FC = () => {
             </span>
           </div>
 
-          <div className="md:col-span-5 flex">
-            <div className="w-full">
+          <div ref={brideContainerRef} className="md:col-span-5 flex">
+            <div ref={brideLayerRef} className="parallax-layer w-full flex">
               <PersonCard person={COUPLE.bride} />
             </div>
           </div>

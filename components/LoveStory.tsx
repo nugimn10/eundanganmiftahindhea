@@ -20,7 +20,7 @@ const LoveStory: React.FC = () => {
           <BotanicalDivider className="mt-6" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="scroll-stagger grid grid-cols-1 md:grid-cols-2 gap-6">
           {LOVE_STORY.map((item) => (
             <article
               key={item.chapter}

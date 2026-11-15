@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CalendarPlus } from 'lucide-react';
 import { useCountdown } from '../hooks/useCountdown';
+import { useParallax } from '../hooks/useParallax';
 import {
   IMAGES,
   WEDDING_DATE_DISPLAY,
@@ -23,21 +24,27 @@ const CountdownBox: React.FC<{ value: number; label: string }> = ({ value, label
 const Countdown: React.FC = () => {
   const { days, hours, minutes, seconds } = useCountdown(WEDDING_DATE_ISO);
   const [imgFailed, setImgFailed] = useState(false);
+  const { containerRef, layerRef } = useParallax<HTMLImageElement>({
+    speed: 0.16,
+    maxOffset: 44,
+  });
 
   return (
     <section
+      ref={containerRef}
       id="hitung-mundur"
       aria-label="Hitung Mundur Pernikahan"
       className="relative overflow-hidden bg-[#162b36] py-16 sm:py-24 px-4 sm:px-6 text-center text-[#f7f9fb]"
     >
       {!imgFailed && (
         <img
+          ref={layerRef}
           src={IMAGES.cover}
           alt=""
           aria-hidden="true"
           referrerPolicy="no-referrer"
           onError={() => setImgFailed(true)}
-          className="absolute inset-0 h-full w-full object-cover opacity-30"
+          className="parallax-layer absolute -top-[14%] left-0 h-[128%] w-full object-cover opacity-30"
         />
       )}
       <div
@@ -56,7 +63,7 @@ const Countdown: React.FC = () => {
 
         <BotanicalDivider variant="light" className="mb-10" />
 
-        <div className="grid grid-cols-4 gap-2.5 sm:gap-5 max-w-xl mx-auto mb-10">
+        <div className="scroll-stagger grid grid-cols-4 gap-2.5 sm:gap-5 max-w-xl mx-auto mb-10">
           <CountdownBox value={days} label="Hari" />
           <CountdownBox value={hours} label="Jam" />
           <CountdownBox value={minutes} label="Menit" />

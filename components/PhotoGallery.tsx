@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { GALLERY_PHOTOS } from '../data/weddingData';
+import { useParallax } from '../hooks/useParallax';
 import { BotanicalDivider } from './BotanicalOrnament';
 
 const PhotoGallery: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [failedIds, setFailedIds] = useState<Record<string, boolean>>({});
+  const { containerRef: leadContainerRef, layerRef: leadLayerRef } = useParallax<HTMLImageElement>({
+    speed: 0.08,
+    maxOffset: 22,
+  });
 
   useEffect(() => {
     if (selectedIndex === null) return;
@@ -49,7 +54,7 @@ const PhotoGallery: React.FC = () => {
           <BotanicalDivider className="mt-6" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div ref={leadContainerRef} className="scroll-stagger grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {GALLERY_PHOTOS.map((photo, index) => {
             const isLead = photo.span === 'lead';
             const isFailed = failedIds[photo.id];
@@ -64,13 +69,16 @@ const PhotoGallery: React.FC = () => {
               >
                 {!isFailed ? (
                   <img
+                    ref={isLead ? leadLayerRef : undefined}
                     src={photo.src}
                     alt={photo.alt}
                     referrerPolicy="no-referrer"
                     onError={() =>
                       setFailedIds((prev) => ({ ...prev, [photo.id]: true }))
                     }
-                    className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                    className={`object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.04] ${
+                      isLead ? 'parallax-layer h-[110%] -mt-[5%] w-full' : 'h-full w-full'
+                    }`}
                   />
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center bg-[#1f3b4a] p-6 text-center text-[#f7f9fb]">
