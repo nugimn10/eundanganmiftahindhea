@@ -22,8 +22,8 @@ export const COUPLE = {
     shortName: 'Fadil',
     fullName: 'Fadil Miftah Fauzi',
     role: 'Mempelai Pria',
-    parents: 'Putra pertama dari Bapak Hendra Wijaya & Ibu Ratna Sari',
-    origin: 'Jakarta Selatan',
+    parents: 'Putra pertama dari Bapak Asep & Ibu Bety',
+    origin: 'Serang',
     bio: 'Pribadi tenang yang gemar merancang perangkat lunak, mendaki pegunungan Nusantara, dan menyeduh kopi pagi.',
     image: groomImg,
   },
@@ -31,8 +31,8 @@ export const COUPLE = {
     shortName: 'Indhea',
     fullName: 'Indhea Ayu Oxza',
     role: 'Mempelai Wanita',
-    parents: 'Putri kedua dari Bapak Agus Santoso & Ibu Dewi Lestari',
-    origin: 'Yogyakarta',
+    parents: 'Putri kedua dari Bapak titik titik & Ibu titik titik',
+    origin: 'Rangkasbitung',
     bio: 'Desainer visual yang mencintai lukisan cat air, aroma mawar taman, serta perjalanan menyusuri pesisir.',
     image: brideImg,
   },
@@ -73,7 +73,7 @@ export const LOVE_STORY: StoryMilestone[] = [
     year: '2025',
     title: 'Khitbah & Lamaran',
     narrative:
-      'Di hadapan kedua keluarga besar di Yogyakarta, Fadil menyampaikan niat tulus untuk meminang Indhea menuju ikatan suci.',
+      'Di hadapan kedua keluarga besar di rangkasbitung, Fadil menyampaikan niat tulus untuk meminang Indhea menuju ikatan suci.',
   },
   {
     chapter: '04',
@@ -129,14 +129,14 @@ export const GALLERY_PHOTOS: GalleryItem[] = [
 
 export const GIFT_ADDRESS = {
   recipient: 'Fadil Miftah Fauzi & Indhea Ayu Oxza',
-  phone: '+62 812-8890-4421',
-  address: 'Jl. Kemang Timur No. 28B, Bangka, Mampang Prapatan, Jakarta Selatan 12730',
+  phone: '+62 821-1560-****',
+  address: 'Citra Gading [mau alamat siapa]',
 };
 
 export const INITIAL_COMMENTS: GuestComment[] = [
   {
     id: 1,
-    name: 'Budi Santoso',
+    name: 'Budi contoh',
     attendance: 'Hadir',
     message:
       'Selamat menempuh hidup baru Fadil & Indhea! Semoga lancar hingga hari H dan menjadi keluarga yang sakinah, mawaddah, warahmah.',
@@ -144,7 +144,7 @@ export const INITIAL_COMMENTS: GuestComment[] = [
   },
   {
     id: 2,
-    name: 'Siti Rahmawati',
+    name: 'Siti contoh',
     attendance: 'Hadir',
     message:
       'Turut berbahagia untuk kalian berdua. Undangan bernuansa Ocean Rose ini manis sekali, sampai jumpa di Rangkasbitung!',
@@ -152,7 +152,7 @@ export const INITIAL_COMMENTS: GuestComment[] = [
   },
   {
     id: 3,
-    name: 'Dimas & Nadia',
+    name: 'Dimas & Nadia contoh',
     attendance: 'Tidak Hadir',
     message:
       'Mohon maaf belum bisa hadir langsung karena tugas di luar kota, namun doa terbaik kami selalu menyertai pernikahan Fadil & Indhea.',
